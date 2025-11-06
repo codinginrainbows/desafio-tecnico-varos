@@ -7,6 +7,7 @@ import { Table } from "@/components/ds/table/Index";
 import Filters from "@/components/ds/table/filter/Index";
 import Title from "@/components/ds/title/Index";
 import BaseLayout from "@/components/layouts/base/Index";
+import { SkeletonTable } from "@/components/ds/skeleton/Index";
 import PlusIcon from "@/assets/icons/plus.svg";
 import { useRouter } from "next/navigation";
 import { useUsuarios } from "@/hooks/useUsuarios";
@@ -110,7 +111,9 @@ const Home = () => {
         </div>
       </div>
 
-      {tableData.length === 0 ? (
+      {loading ? (
+        <SkeletonTable />
+      ) : tableData.length === 0 ? (
         <div className="flex items-center justify-center h-64 bg-gray-950 rounded-lg border border-gray-700">
           <p className="text-gray-400">
             {selectedConsultor

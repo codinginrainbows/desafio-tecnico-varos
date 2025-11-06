@@ -11,6 +11,7 @@ import { Tabs } from "@/components/ds/tabs/Index";
 import type { Tab } from "@/components/ds/tabs/Index";
 import BaseLayout from "@/components/layouts/base/Index";
 import Title from "@/components/ds/title/Index";
+import { SkeletonForm, SkeletonText } from "@/components/ds/skeleton/Index";
 import { stateOptions } from "@/__mocks__/mocks";
 import {
   useUsuario,
@@ -238,7 +239,19 @@ const UserUpdate = () => {
     },
   ];
 
-  if (!usuario && !loadingUsuario) {
+  if (loadingUsuario) {
+    return (
+      <BaseLayout width="900px">
+        <div className="bg-gray-950 rounded-lg p-8">
+          <SkeletonText />
+          <SkeletonText />
+          <SkeletonForm fields={12} />
+        </div>
+      </BaseLayout>
+    );
+  }
+
+  if (!usuario) {
     return (
       <BaseLayout width="900px">
         <div className="flex items-center justify-center h-64">

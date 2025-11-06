@@ -72,12 +72,16 @@ export const SkeletonTable: React.FC<{ rows?: number; className?: string }> = ({
   className = "",
 }) => (
   <div
-    className={`bg-gray-950 rounded-lg border border-gray-700 p-6 space-y-4 ${className}`}
+    className={`bg-gray-950 rounded-lg border border-gray-700 overflow-hidden ${className}`}
   >
-    <Skeleton height="3rem" rounded="md" />
-    {[...Array(rows)].map((_, i) => (
-      <Skeleton key={i} height="4rem" rounded="md" />
-    ))}
+    <div className="p-6 border-b border-gray-700">
+      <Skeleton height="3rem" rounded="md" />
+    </div>
+    <div className="p-6 space-y-4">
+      {[...Array(rows)].map((_, i) => (
+        <Skeleton key={i} height="4rem" rounded="md" />
+      ))}
+    </div>
   </div>
 );
 

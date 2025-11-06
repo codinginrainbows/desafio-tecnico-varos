@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// GET /api/usuarios/:id - Buscar um usuário específico
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -57,7 +56,6 @@ export async function GET(
   }
 }
 
-// PUT /api/usuarios/:id - Atualizar usuário
 export async function PUT(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -76,10 +74,9 @@ export async function PUT(
       endereco,
       complemento,
       tipoUsuario,
-      clientesIds, // Novos IDs de clientes (se for consultor)
+      clientesIds,
     } = body;
 
-    // Buscar usuário atual
     const usuarioAtual = await prisma.usuario.findUnique({
       where: { id },
     });
@@ -93,14 +90,12 @@ export async function PUT(
 
     const isConsultor = tipoUsuario === "consultor";
 
-    // Se mudou de CONSULTOR para CLIENTE, deletar relações
     if (usuarioAtual.isConsultor && !isConsultor) {
       await prisma.usuarioRelacao.deleteMany({
         where: { consultorId: id },
       });
     }
 
-    // Atualizar dados do usuário
     const usuario = await prisma.usuario.update({
       where: { id },
       data: {
@@ -117,14 +112,11 @@ export async function PUT(
       },
     });
 
-    // Se for consultor, atualizar relações com clientes
     if (isConsultor && clientesIds !== undefined) {
-      // Deletar relações antigas
       await prisma.usuarioRelacao.deleteMany({
         where: { consultorId: id },
       });
 
-      // Criar novas relações
       if (clientesIds.length > 0) {
         await prisma.usuarioRelacao.createMany({
           data: clientesIds.map((clienteId: string) => ({
@@ -135,7 +127,6 @@ export async function PUT(
       }
     }
 
-    // Buscar usuário atualizado com relações
     const usuarioCompleto = await prisma.usuario.findUnique({
       where: { id },
       include: {
@@ -170,7 +161,6 @@ export async function PUT(
   }
 }
 
-// DELETE /api/usuarios/:id - Deletar usuário
 export async function DELETE(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -189,7 +179,6 @@ export async function DELETE(
       );
     }
 
-    // O Prisma vai deletar as relações automaticamente por causa do onDelete: Cascade
     await prisma.usuario.delete({
       where: { id },
     });

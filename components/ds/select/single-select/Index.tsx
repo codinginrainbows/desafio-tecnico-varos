@@ -16,6 +16,7 @@ interface SingleSelectProps {
   value?: string;
   onChange?: (value: string) => void;
   className?: string;
+  error?: string;
 }
 
 const SingleSelect: React.FC<SingleSelectProps> = ({
@@ -25,6 +26,7 @@ const SingleSelect: React.FC<SingleSelectProps> = ({
   value,
   onChange,
   className = "",
+  error,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value || "");
@@ -63,7 +65,9 @@ const SingleSelect: React.FC<SingleSelectProps> = ({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full min-w-[180px] bg-greyscale-800 border border-greyscale-800 rounded-lg px-4 py-3 flex items-center justify-between hover:border-greyscale-700 transition-colors cursor-pointer"
+          className={`w-full min-w-[180px] bg-greyscale-800 border ${
+            error ? "border-red-500" : "border-greyscale-800"
+          } rounded-lg px-4 py-3 flex items-center justify-between hover:border-greyscale-700 transition-colors cursor-pointer`}
         >
           <div className="flex items-center gap-2">
             <span className="text-greyscale-400 text-sm">
@@ -107,6 +111,7 @@ const SingleSelect: React.FC<SingleSelectProps> = ({
           </div>
         )}
       </div>
+      {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
     </div>
   );
 };

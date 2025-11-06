@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id           String   @id @default(cuid())
+  nome         String
+  email        String   @unique
+  telefone     String
+  cpf          String   @unique
+  idade        Int
+  cep          String
+  estado       String
+  endereco     String
+  complemento  String?
+  isConsultor  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  clientesVinculados  UsuarioRelacao[] @relation("ConsultorRelacao")
+  
+  consultoresVinculados UsuarioRelacao[] @relation("ClienteRelacao")
+
+  @@map("usuarios")
+}
+
+model UsuarioRelacao {
+  consultorId  String
+  clienteId    String
+  consultor    Usuario  @relation("ConsultorRelacao", fields: [consultorId], references: [id], onDelete: Cascade)
+  cliente      Usuario  @relation("ClienteRelacao", fields: [clienteId], references: [id], onDelete: Cascade)
+  vinculadoEm  DateTime @default(now())
+
+  @@id([consultorId, clienteId])
+  @@map("usuario_relacao")
+}

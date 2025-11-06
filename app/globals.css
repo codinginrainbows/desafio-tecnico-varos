@@ -1,21 +1,96 @@
 @import "tailwindcss";
 
+/* Design System vars */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary */
+  --primary-philodendron: #0f6035;
+  --primary-sGreen: #00ff70;
+  --primary-flGreen: #9fcb19;
+  --primary-cBlack: #131313;
+  --primary-doctor: #fafafa;
+
+  /* Greyscale */
+  --greyscale-100: #f2f4f8;
+  --greyscale-200: #e2e5eb;
+  --greyscale-300: #d3d6df;
+  --greyscale-400: #c6cad2;
+  --greyscale-500: #b0b7be;
+  --greyscale-600: #878d96;
+  --greyscale-700: #4d5358;
+  --greyscale-800: #222729;
+  --greyscale-900: #131516;
+
+  /* Secondary - Green */
+  --green-100: #55fc55;
+  --green-200: #4fe04f;
+  --green-300: #4bc94b;
+  --green-400: #43af43;
+  --green-500: #3c963c;
+  --green-600: #317a31;
+  --green-700: #255925;
+  --green-800: #1b3f1b;
+  --green-900: #142d14;
+
+  /* App surfaces */
+  --background: var(--primary-doctor);
+  --foreground: var(--primary-cBlack);
 }
 
+/* Tokens Tailwind v4 */
 @theme inline {
+  /* App */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Primary */
+  --color-primary-philodendron: var(--primary-philodendron);
+  --color-primary-sGreen: var(--primary-sGreen);
+  --color-primary-flGreen: var(--primary-flGreen);
+  --color-primary-cBlack: var(--primary-cBlack);
+  --color-primary-doctor: var(--primary-doctor);
+
+  /* Greyscale (também mapeado para gray-*) */
+  --color-greyscale-100: var(--greyscale-100);
+  --color-greyscale-200: var(--greyscale-200);
+  --color-greyscale-300: var(--greyscale-300);
+  --color-greyscale-400: var(--greyscale-400);
+  --color-greyscale-500: var(--greyscale-500);
+  --color-greyscale-600: var(--greyscale-600);
+  --color-greyscale-700: var(--greyscale-700);
+  --color-greyscale-800: var(--greyscale-800);
+  --color-greyscale-900: var(--greyscale-900);
+
+  /* Alias para gray-* (para classes existentes) */
+  --color-gray-100: var(--greyscale-100);
+  --color-gray-200: var(--greyscale-200);
+  --color-gray-300: var(--greyscale-300);
+  --color-gray-400: var(--greyscale-400);
+  --color-gray-500: var(--greyscale-500);
+  --color-gray-600: var(--greyscale-600);
+  --color-gray-700: var(--greyscale-700);
+  --color-gray-800: var(--greyscale-800);
+  --color-gray-900: var(--greyscale-900);
+  /* suporte a 950 usado no código */
+  --color-gray-950: var(--greyscale-900);
+
+  /* Escalas secundárias substituem classes padrão */
+  --color-green-100: var(--green-100);
+  --color-green-200: var(--green-200);
+  --color-green-300: var(--green-300);
+  --color-green-400: var(--green-400);
+  --color-green-500: var(--green-500);
+  --color-green-600: var(--green-600);
+  --color-green-700: var(--green-700);
+  --color-green-800: var(--green-800);
+  --color-green-900: var(--green-900);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--primary-cBlack);
+    --foreground: var(--primary-doctor);
   }
 }
 

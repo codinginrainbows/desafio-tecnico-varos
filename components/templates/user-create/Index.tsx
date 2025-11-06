@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@/components/ds/button/Index";
 import { Input } from "@/components/ds/input/Index";
 import { SingleSelect } from "@/components/ds/select/single-select/Index";
@@ -13,27 +14,30 @@ import Title from "@/components/ds/title/Index";
 import { stateOptions } from "@/__mocks__/mocks";
 import { useClientes, createUsuario } from "@/hooks/useUsuarios";
 import { useRouter } from "next/navigation";
-
-interface FormData {
-  nome: string;
-  email: string;
-  telefone: string;
-  tipoUsuario: string;
-  idade: string;
-  cpf: string;
-  cep: string;
-  estado: string;
-  endereco: string;
-  complemento: string;
-  clientesIds: string[];
-}
+import {
+  userFormSchema,
+  type UserFormData,
+  maskCPF,
+  maskPhone,
+  maskCEP,
+  unmaskCPF,
+  unmaskPhone,
+  unmaskCEP,
+} from "@/lib/validators";
 
 const UserCreate = () => {
   const router = useRouter();
   const { clientes, loading: loadingClientes } = useClientes();
   const [saving, setSaving] = useState(false);
 
-  const { register, handleSubmit, watch, setValue } = useForm<FormData>({
+  const {
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<UserFormData>({
+    resolver: zodResolver(userFormSchema),
+    mode: "onBlur",
     defaultValues: {
       nome: "",
       email: "",
@@ -51,12 +55,15 @@ const UserCreate = () => {
 
   const tipoUsuario = watch("tipoUsuario");
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: UserFormData) => {
     try {
       setSaving(true);
 
       const payload = {
         ...data,
+        cpf: unmaskCPF(data.cpf),
+        telefone: unmaskPhone(data.telefone),
+        cep: unmaskCEP(data.cep),
         idade: parseInt(data.idade),
       };
 
@@ -88,25 +95,35 @@ const UserCreate = () => {
         type="number"
         value={watch("idade")}
         onChange={(value) => setValue("idade", value)}
+        error={errors.idade?.message}
       />
       <Input
         label="CPF"
         placeholder="000.000.000-00"
         value={watch("cpf")}
-        onChange={(value) => setValue("cpf", value)}
+        onChange={(value) =>
+          setValue("cpf", maskCPF(value), { shouldValidate: true })
+        }
+        error={errors.cpf?.message}
       />
       <Input
         label="CEP"
         placeholder="00000-000"
         value={watch("cep")}
-        onChange={(value) => setValue("cep", value)}
+        onChange={(value) =>
+          setValue("cep", maskCEP(value), { shouldValidate: true })
+        }
+        error={errors.cep?.message}
       />
       <SingleSelect
         label="Estado"
         options={stateOptions}
         placeholder="Selecione o estado"
         value={watch("estado")}
-        onChange={(value) => setValue("estado", value)}
+        onChange={(value) =>
+          setValue("estado", value, { shouldValidate: true })
+        }
+        error={errors.estado?.message}
       />
       <div className="col-span-2">
         <Input
@@ -114,6 +131,7 @@ const UserCreate = () => {
           placeholder="Digite o endereço"
           value={watch("endereco")}
           onChange={(value) => setValue("endereco", value)}
+          error={errors.endereco?.message}
         />
       </div>
       <div className="col-span-2">
@@ -122,6 +140,7 @@ const UserCreate = () => {
           placeholder="Digite o complemento"
           value={watch("complemento")}
           onChange={(value) => setValue("complemento", value)}
+          error={errors.complemento?.message}
         />
       </div>
     </div>
@@ -143,7 +162,10 @@ const UserCreate = () => {
           options={clientOptions}
           placeholder="Selecione os clientes"
           value={watch("clientesIds")}
-          onChange={(values) => setValue("clientesIds", values)}
+          onChange={(values) =>
+            setValue("clientesIds", values, { shouldValidate: true })
+          }
+          error={errors.clientesIds?.message}
         />
       )}
     </div>
@@ -184,8 +206,11 @@ const UserCreate = () => {
             label="Tipo do usuário"
             options={userTypeOptions}
             value={watch("tipoUsuario")}
-            onChange={(value) => setValue("tipoUsuario", value)}
+            onChange={(value) =>
+              setValue("tipoUsuario", value, { shouldValidate: true })
+            }
             placeholder="Selecione o tipo de usuário"
+            error={errors.tipoUsuario?.message}
           />
 
           <div className="grid grid-cols-2 gap-6">
@@ -194,13 +219,17 @@ const UserCreate = () => {
               placeholder="Digite o nome"
               value={watch("nome")}
               onChange={(value) => setValue("nome", value)}
+              error={errors.nome?.message}
             />
             <Input
               label="Telefone"
-              placeholder="Digite o telefone"
+              placeholder="(00) 00000-0000"
               type="tel"
               value={watch("telefone")}
-              onChange={(value) => setValue("telefone", value)}
+              onChange={(value) =>
+                setValue("telefone", maskPhone(value), { shouldValidate: true })
+              }
+              error={errors.telefone?.message}
             />
           </div>
 
@@ -210,6 +239,7 @@ const UserCreate = () => {
             type="email"
             value={watch("email")}
             onChange={(value) => setValue("email", value)}
+            error={errors.email?.message}
           />
 
           <Tabs tabs={subTabs} />

@@ -16,6 +16,7 @@ interface MultiSelectProps {
   value?: string[];
   onChange?: (values: string[]) => void;
   className?: string;
+  error?: string;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -25,6 +26,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   value = [],
   onChange,
   className = "",
+  error,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState<string[]>(value);
@@ -80,7 +82,9 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full min-w-[180px] bg-greyscale-800 border border-greyscale-800 rounded-lg px-4 py-3 flex items-center justify-between hover:border-greyscale-700 transition-colors cursor-pointer"
+          className={`w-full min-w-[180px] bg-greyscale-800 border ${
+            error ? "border-red-500" : "border-greyscale-800"
+          } rounded-lg px-4 py-3 flex items-center justify-between hover:border-greyscale-700 transition-colors cursor-pointer`}
         >
           <div className="flex items-center gap-2">
             <span className="text-greyscale-400 text-sm">
@@ -148,6 +152,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
           </div>
         )}
       </div>
+      {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
     </div>
   );
 };

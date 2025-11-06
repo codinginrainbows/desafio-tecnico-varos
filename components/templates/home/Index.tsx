@@ -13,7 +13,6 @@ import { useRouter } from "next/navigation";
 import { useUsuarios } from "@/hooks/useUsuarios";
 import { maskCPF, maskPhone, maskCEP } from "@/lib/validators";
 import { columns } from "@/__mocks__/mocks";
-import { toast } from "react-toastify";
 
 const Home = () => {
   const router = useRouter();

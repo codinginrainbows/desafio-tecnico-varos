@@ -36,29 +36,6 @@ export function unmaskCEP(value: string): string {
   return value.replace(/\D/g, "");
 }
 
-export function validarCPF(cpf: string): boolean {
-  cpf = cpf.replace(/[^\d]/g, "");
-
-  if (cpf.length !== 11) return false;
-  if (/^(\d)\1+$/.test(cpf)) return false;
-
-  let soma = 0;
-  for (let i = 0; i < 9; i++) {
-    soma += parseInt(cpf.charAt(i)) * (10 - i);
-  }
-  let resto = (soma * 10) % 11;
-  if (resto === 10 || resto === 11) resto = 0;
-  if (resto !== parseInt(cpf.charAt(9))) return false;
-
-  soma = 0;
-  for (let i = 0; i < 10; i++) {
-    soma += parseInt(cpf.charAt(i)) * (11 - i);
-  }
-  resto = (soma * 10) % 11;
-  if (resto === 10 || resto === 11) resto = 0;
-  return resto === parseInt(cpf.charAt(10));
-}
-
 export const userFormSchema = z
   .object({
     nome: z
@@ -81,8 +58,7 @@ export const userFormSchema = z
     cpf: z
       .string()
       .min(1, "CPF é obrigatório")
-      .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "Formato inválido: 000.000.000-00")
-      .refine((cpf) => validarCPF(cpf), "CPF inválido"),
+      .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "Formato inválido: 000.000.000-00"),
 
     idade: z
       .string()
@@ -108,14 +84,14 @@ export const userFormSchema = z
 
     complemento: z.string().optional(),
 
-    tipoUsuario: z.string().min(1, "Selecione o tipo de usuário"),
+    isConsultor: z.boolean(),
 
     clientesIds: z.array(z.string()).optional(),
   })
   .refine(
     (data) => {
       if (
-        data.tipoUsuario === "consultor" &&
+        data.isConsultor === true &&
         (!data.clientesIds || data.clientesIds.length === 0)
       ) {
         return false;

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
 import Button from "@/components/ds/button/Index";
 import { Input } from "@/components/ds/input/Index";
 import { SingleSelect } from "@/components/ds/select/single-select/Index";
@@ -11,6 +12,7 @@ import { Tabs } from "@/components/ds/tabs/Index";
 import type { Tab } from "@/components/ds/tabs/Index";
 import BaseLayout from "@/components/layouts/base/Index";
 import Title from "@/components/ds/title/Index";
+import { SkeletonForm, SkeletonText } from "@/components/ds/skeleton/Index";
 import { stateOptions } from "@/__mocks__/mocks";
 import {
   useUsuario,
@@ -52,7 +54,7 @@ const UserUpdate = () => {
       nome: "",
       email: "",
       telefone: "",
-      tipoUsuario: "",
+      isConsultor: false,
       idade: "",
       cpf: "",
       cep: "",
@@ -63,7 +65,7 @@ const UserUpdate = () => {
     },
   });
 
-  const tipoUsuario = watch("tipoUsuario");
+  const isConsultor = watch("isConsultor");
 
   useEffect(() => {
     if (usuario) {
@@ -71,7 +73,7 @@ const UserUpdate = () => {
         nome: usuario.nome,
         email: usuario.email,
         telefone: maskPhone(usuario.telefone || ""),
-        tipoUsuario: usuario.isConsultor ? "consultor" : "cliente",
+        isConsultor: usuario.isConsultor,
         idade: String(usuario.idade),
         cpf: maskCPF(usuario.cpf || ""),
         cep: maskCEP(usuario.cep || ""),
@@ -90,18 +92,24 @@ const UserUpdate = () => {
       setSaving(true);
 
       const payload = {
-        ...data,
+        nome: data.nome,
+        email: data.email,
         cpf: unmaskCPF(data.cpf),
         telefone: unmaskPhone(data.telefone),
         cep: unmaskCEP(data.cep),
         idade: parseInt(data.idade),
+        estado: data.estado,
+        endereco: data.endereco,
+        complemento: data.complemento || "",
+        isConsultor: Boolean(data.isConsultor),
+        clientesIds: data.clientesIds || [],
       };
 
       await updateUsuario(userId, payload);
-      alert("Usuário atualizado com sucesso!");
+      toast.success("Usuário atualizado com sucesso!");
       router.push("/");
     } catch (error) {
-      alert(
+      toast.error(
         error instanceof Error ? error.message : "Erro ao atualizar usuário"
       );
     } finally {
@@ -115,10 +123,10 @@ const UserUpdate = () => {
     if (confirm("Tem certeza que deseja deletar este usuário?")) {
       try {
         await deleteUsuario(userId);
-        alert("Usuário deletado com sucesso!");
+        toast.success("Usuário deletado com sucesso!");
         router.push("/");
       } catch (error) {
-        alert(
+        toast.error(
           error instanceof Error ? error.message : "Erro ao deletar usuário"
         );
       }
@@ -196,7 +204,7 @@ const UserUpdate = () => {
 
   const addClientsContent = (
     <div className="mt-6">
-      {tipoUsuario !== "consultor" ? (
+      {!isConsultor ? (
         <div className="p-4 bg-yellow-900/20 border border-yellow-700 rounded-lg">
           <p className="text-yellow-500 text-sm">
             ⚠️ Apenas consultores podem ter clientes vinculados
@@ -232,7 +240,19 @@ const UserUpdate = () => {
     },
   ];
 
-  if (!usuario && !loadingUsuario) {
+  if (loadingUsuario) {
+    return (
+      <BaseLayout width="900px">
+        <div className="bg-gray-950 rounded-lg p-8">
+          <SkeletonText />
+          <SkeletonText />
+          <SkeletonForm fields={12} />
+        </div>
+      </BaseLayout>
+    );
+  }
+
+  if (!usuario) {
     return (
       <BaseLayout width="900px">
         <div className="flex items-center justify-center h-64">
@@ -270,12 +290,14 @@ const UserUpdate = () => {
           <SingleSelect
             label="Tipo do usuário"
             options={userTypeOptions}
-            value={watch("tipoUsuario")}
+            value={watch("isConsultor") ? "consultor" : "cliente"}
             onChange={(value) =>
-              setValue("tipoUsuario", value, { shouldValidate: true })
+              setValue("isConsultor", value === "consultor", {
+                shouldValidate: true,
+              })
             }
             placeholder="Selecione o tipo de usuário"
-            error={errors.tipoUsuario?.message}
+            error={errors.isConsultor?.message}
           />
 
           <div className="grid grid-cols-2 gap-6">

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
 import Button from "@/components/ds/button/Index";
 import { Input } from "@/components/ds/input/Index";
 import { SingleSelect } from "@/components/ds/select/single-select/Index";
@@ -105,10 +106,10 @@ const UserUpdate = () => {
       };
 
       await updateUsuario(userId, payload);
-      alert("Usuário atualizado com sucesso!");
+      toast.success("Usuário atualizado com sucesso!");
       router.push("/");
     } catch (error) {
-      alert(
+      toast.error(
         error instanceof Error ? error.message : "Erro ao atualizar usuário"
       );
     } finally {
@@ -122,10 +123,10 @@ const UserUpdate = () => {
     if (confirm("Tem certeza que deseja deletar este usuário?")) {
       try {
         await deleteUsuario(userId);
-        alert("Usuário deletado com sucesso!");
+        toast.success("Usuário deletado com sucesso!");
         router.push("/");
       } catch (error) {
-        alert(
+        toast.error(
           error instanceof Error ? error.message : "Erro ao deletar usuário"
         );
       }

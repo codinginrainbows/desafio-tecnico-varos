@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
 import Button from "@/components/ds/button/Index";
 import { Input } from "@/components/ds/input/Index";
 import { SingleSelect } from "@/components/ds/select/single-select/Index";
@@ -74,10 +75,12 @@ const UserCreate = () => {
       };
 
       await createUsuario(payload);
-      alert("Usuário criado com sucesso!");
+      toast.success("Usuário criado com sucesso!");
       router.push("/");
     } catch (error) {
-      alert(error instanceof Error ? error.message : "Erro ao criar usuário");
+      toast.error(
+        error instanceof Error ? error.message : "Erro ao criar usuário"
+      );
     } finally {
       setSaving(false);
     }

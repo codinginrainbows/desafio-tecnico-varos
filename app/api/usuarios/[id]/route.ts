@@ -73,7 +73,7 @@ export async function PUT(
       estado,
       endereco,
       complemento,
-      tipoUsuario,
+      isConsultor,
       clientesIds,
     } = body;
 
@@ -87,8 +87,6 @@ export async function PUT(
         { status: 404 }
       );
     }
-
-    const isConsultor = tipoUsuario === "consultor";
 
     if (usuarioAtual.isConsultor && !isConsultor) {
       await prisma.usuarioRelacao.deleteMany({
@@ -108,7 +106,7 @@ export async function PUT(
         estado,
         endereco,
         complemento: complemento || null,
-        isConsultor,
+        isConsultor: Boolean(isConsultor),
       },
     });
 

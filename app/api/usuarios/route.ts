@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       estado,
       endereco,
       complemento,
-      tipoUsuario,
+      isConsultor,
       clientesIds,
     } = body;
 
@@ -69,11 +69,11 @@ export async function POST(request: NextRequest) {
         estado,
         endereco,
         complemento: complemento || null,
-        isConsultor: tipoUsuario === "consultor",
+        isConsultor: Boolean(isConsultor),
       },
     });
 
-    if (tipoUsuario === "consultor" && clientesIds && clientesIds.length > 0) {
+    if (isConsultor && clientesIds && clientesIds.length > 0) {
       await prisma.usuarioRelacao.createMany({
         data: clientesIds.map((clienteId: string) => ({
           consultorId: usuario.id,

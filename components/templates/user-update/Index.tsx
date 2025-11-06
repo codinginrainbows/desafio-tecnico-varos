@@ -52,7 +52,7 @@ const UserUpdate = () => {
       nome: "",
       email: "",
       telefone: "",
-      tipoUsuario: "",
+      isConsultor: false,
       idade: "",
       cpf: "",
       cep: "",
@@ -63,7 +63,7 @@ const UserUpdate = () => {
     },
   });
 
-  const tipoUsuario = watch("tipoUsuario");
+  const isConsultor = watch("isConsultor");
 
   useEffect(() => {
     if (usuario) {
@@ -71,7 +71,7 @@ const UserUpdate = () => {
         nome: usuario.nome,
         email: usuario.email,
         telefone: maskPhone(usuario.telefone || ""),
-        tipoUsuario: usuario.isConsultor ? "consultor" : "cliente",
+        isConsultor: usuario.isConsultor,
         idade: String(usuario.idade),
         cpf: maskCPF(usuario.cpf || ""),
         cep: maskCEP(usuario.cep || ""),
@@ -90,11 +90,17 @@ const UserUpdate = () => {
       setSaving(true);
 
       const payload = {
-        ...data,
+        nome: data.nome,
+        email: data.email,
         cpf: unmaskCPF(data.cpf),
         telefone: unmaskPhone(data.telefone),
         cep: unmaskCEP(data.cep),
         idade: parseInt(data.idade),
+        estado: data.estado,
+        endereco: data.endereco,
+        complemento: data.complemento || "",
+        isConsultor: Boolean(data.isConsultor),
+        clientesIds: data.clientesIds || [],
       };
 
       await updateUsuario(userId, payload);
@@ -196,7 +202,7 @@ const UserUpdate = () => {
 
   const addClientsContent = (
     <div className="mt-6">
-      {tipoUsuario !== "consultor" ? (
+      {!isConsultor ? (
         <div className="p-4 bg-yellow-900/20 border border-yellow-700 rounded-lg">
           <p className="text-yellow-500 text-sm">
             ⚠️ Apenas consultores podem ter clientes vinculados
@@ -270,12 +276,14 @@ const UserUpdate = () => {
           <SingleSelect
             label="Tipo do usuário"
             options={userTypeOptions}
-            value={watch("tipoUsuario")}
+            value={watch("isConsultor") ? "consultor" : "cliente"}
             onChange={(value) =>
-              setValue("tipoUsuario", value, { shouldValidate: true })
+              setValue("isConsultor", value === "consultor", {
+                shouldValidate: true,
+              })
             }
             placeholder="Selecione o tipo de usuário"
-            error={errors.tipoUsuario?.message}
+            error={errors.isConsultor?.message}
           />
 
           <div className="grid grid-cols-2 gap-6">

@@ -42,7 +42,7 @@ const UserCreate = () => {
       nome: "",
       email: "",
       telefone: "",
-      tipoUsuario: "",
+      isConsultor: false,
       idade: "",
       cpf: "",
       cep: "",
@@ -53,18 +53,24 @@ const UserCreate = () => {
     },
   });
 
-  const tipoUsuario = watch("tipoUsuario");
+  const isConsultor = watch("isConsultor");
 
   const onSubmit = async (data: UserFormData) => {
     try {
       setSaving(true);
 
       const payload = {
-        ...data,
+        nome: data.nome,
+        email: data.email,
         cpf: unmaskCPF(data.cpf),
         telefone: unmaskPhone(data.telefone),
         cep: unmaskCEP(data.cep),
         idade: parseInt(data.idade),
+        estado: data.estado,
+        endereco: data.endereco,
+        complemento: data.complemento || "",
+        isConsultor: Boolean(data.isConsultor),
+        clientesIds: data.clientesIds || [],
       };
 
       await createUsuario(payload);
@@ -148,7 +154,7 @@ const UserCreate = () => {
 
   const addClientsContent = (
     <div className="mt-6">
-      {tipoUsuario !== "consultor" ? (
+      {!isConsultor ? (
         <div className="p-4 bg-yellow-900/20 border border-yellow-700 rounded-lg">
           <p className="text-yellow-500 text-sm">
             ⚠️ Apenas consultores podem ter clientes vinculados
@@ -205,12 +211,14 @@ const UserCreate = () => {
           <SingleSelect
             label="Tipo do usuário"
             options={userTypeOptions}
-            value={watch("tipoUsuario")}
+            value={watch("isConsultor") ? "consultor" : "cliente"}
             onChange={(value) =>
-              setValue("tipoUsuario", value, { shouldValidate: true })
+              setValue("isConsultor", value === "consultor", {
+                shouldValidate: true,
+              })
             }
             placeholder="Selecione o tipo de usuário"
-            error={errors.tipoUsuario?.message}
+            error={errors.isConsultor?.message}
           />
 
           <div className="grid grid-cols-2 gap-6">

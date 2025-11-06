@@ -10,28 +10,16 @@ import BaseLayout from "@/components/layouts/base/Index";
 import PlusIcon from "@/assets/icons/plus.svg";
 import { useRouter } from "next/navigation";
 import { useUsuarios } from "@/hooks/useUsuarios";
+import { maskCPF, maskPhone, maskCEP } from "@/lib/validators";
+import { columns } from "@/__mocks__/mocks";
 
 const Home = () => {
   const router = useRouter();
   const { usuarios, loading, error } = useUsuarios();
   const [selectedConsultor, setSelectedConsultor] = useState<string>("");
 
-  // Colunas da tabela (apenas para clientes)
-  const columns = [
-    { key: "nome", label: "Nome" },
-    { key: "email", label: "Email" },
-    { key: "telefone", label: "Telefone" },
-    { key: "cpf", label: "CPF" },
-    { key: "idade", label: "Idade" },
-    { key: "endereco", label: "Endereço" },
-    { key: "createdAt", label: "Criado Em" },
-    { key: "updatedAt", label: "Atualizado Em" },
-  ];
-
-  // Filtrar apenas consultores para as opções
   const consultores = usuarios.filter((u) => u.isConsultor);
 
-  // Opções do filtro (apenas consultores)
   const consultorNameOptions = consultores.map((c) => ({
     value: c.id,
     label: c.nome,
@@ -42,22 +30,19 @@ const Home = () => {
     label: c.email,
   }));
 
-  // Buscar o consultor selecionado
   const consultorSelecionado = usuarios.find((u) => u.id === selectedConsultor);
 
-  // Todos os clientes do sistema
   const todosClientes = usuarios.filter((u) => !u.isConsultor);
 
-  // Dados da tabela:
-  // - Se consultor selecionado: apenas seus clientes
-  // - Se não selecionado: todos os clientes
   const tableData = selectedConsultor
     ? consultorSelecionado?.clientesVinculados?.map((relacao) => ({
         id: relacao.cliente.id,
         nome: relacao.cliente.nome,
         email: relacao.cliente.email,
-        telefone: relacao.cliente.telefone || "-",
-        cpf: relacao.cliente.cpf || "-",
+        telefone: relacao.cliente.telefone
+          ? maskPhone(relacao.cliente.telefone)
+          : "-",
+        cpf: relacao.cliente.cpf ? maskCPF(relacao.cliente.cpf) : "-",
         idade: relacao.cliente.idade || "-",
         endereco: relacao.cliente.endereco || "-",
         createdAt: new Date(relacao.cliente.createdAt).toLocaleDateString(
@@ -72,8 +57,8 @@ const Home = () => {
         id: cliente.id,
         nome: cliente.nome,
         email: cliente.email,
-        telefone: cliente.telefone || "-",
-        cpf: cliente.cpf || "-",
+        telefone: cliente.telefone ? maskPhone(cliente.telefone) : "-",
+        cpf: cliente.cpf ? maskCPF(cliente.cpf) : "-",
         idade: cliente.idade || "-",
         endereco: cliente.endereco || "-",
         createdAt: new Date(cliente.createdAt).toLocaleDateString("pt-BR"),

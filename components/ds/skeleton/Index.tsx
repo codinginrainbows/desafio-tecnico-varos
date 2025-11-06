@@ -42,7 +42,6 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   );
 };
 
-// Skeleton pré-configurados para casos comuns
 export const SkeletonText: React.FC<{ lines?: number; className?: string }> = ({
   lines = 1,
   className = "",

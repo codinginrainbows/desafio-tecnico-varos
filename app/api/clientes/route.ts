@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// GET /api/clientes - Listar apenas usuários do tipo cliente
 export async function GET() {
   try {
     const clientes = await prisma.usuario.findMany({

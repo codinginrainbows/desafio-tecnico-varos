@@ -1,11 +1,12 @@
 import React from "react";
+import Image from "next/image";
+import ArrowGrowIcon from "@/assets/icons/arrow_grow.svg";
 
 interface CardProps {
   label: string;
   value: number;
   subtitle: string;
   showTrend?: boolean;
-  trendUp?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -13,7 +14,6 @@ const Card: React.FC<CardProps> = ({
   value,
   subtitle,
   showTrend = true,
-  trendUp = true,
 }) => {
   return (
     <div className="bg-gray-950 rounded-lg px-6 py-4 min-w-[220px] border border-gray-700">
@@ -23,15 +23,7 @@ const Card: React.FC<CardProps> = ({
         <span className="text-white text-3xl font-semibold">{value}</span>
 
         {showTrend && (
-          <svg
-            className={`w-4 h-4 ${
-              trendUp ? "text-green-500" : "text-red-500"
-            } ${!trendUp && "rotate-180"}`}
-            viewBox="0 0 16 16"
-            fill="none"
-          >
-            <path d="M8 3L12 8H4L8 3Z" fill="currentColor" />
-          </svg>
+          <Image src={ArrowGrowIcon} alt="trend" width={16} height={16} />
         )}
       </div>
 

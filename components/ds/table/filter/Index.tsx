@@ -44,7 +44,7 @@ const Filters: React.FC<FiltersProps> = ({
             options={nameOptions}
             value={filters.consultorName}
             onChange={(value) => handleFilterChange("consultorName", value)}
-            placeholder="Nome do usuário"
+            placeholder="Nome do consultor"
           />
         </div>
 
@@ -56,7 +56,7 @@ const Filters: React.FC<FiltersProps> = ({
             options={emailOptions}
             value={filters.consultorEmail}
             onChange={(value) => handleFilterChange("consultorEmail", value)}
-            placeholder="Email do usuário"
+            placeholder="Email do consultor"
           />
         </div>
       </div>

@@ -81,24 +81,26 @@ const Home = () => {
 
   return (
     <BaseLayout>
-      <div className="flex justify-between items-end gap-6 mb-2">
-        <Title text="Dashboard" className="mb-8" />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-6 mb-2">
+        <Title text="Dashboard" className="mb-4 sm:mb-8" />
         <Button
-          text="Create User"
+          text="Criar Usuário"
           variant="primary"
           rounded={false}
           icon={PlusIcon}
           onClick={() => router.push("/user-create")}
+          className="w-full sm:w-auto"
         />
       </div>
-      <div className="flex justify-between items-end gap-6 mb-8">
+
+      <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-end gap-6 mb-8">
         <Card
           label="Total de clientes"
           value={totalClientes}
           subtitle="cadastrados no sistema"
           showTrend={true}
         />
-        <div>
+        <div className="w-full lg:max-w-3xl">
           <Filters
             nameOptions={consultorNameOptions}
             emailOptions={consultorEmailOptions}
@@ -115,14 +117,16 @@ const Home = () => {
         <SkeletonTable />
       ) : tableData.length === 0 ? (
         <div className="flex items-center justify-center h-64 bg-gray-950 rounded-lg border border-gray-700">
-          <p className="text-gray-400">
+          <p className="text-gray-400 text-center px-4">
             {selectedConsultor
               ? "Este consultor não possui clientes vinculados"
               : "Nenhum cliente cadastrado no sistema"}
           </p>
         </div>
       ) : (
-        <Table columns={columns} data={tableData} />
+        <div className="overflow-x-auto">
+          <Table columns={columns} data={tableData} />
+        </div>
       )}
     </BaseLayout>
   );

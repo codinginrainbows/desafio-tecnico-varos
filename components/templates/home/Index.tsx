@@ -96,7 +96,7 @@ const Home = () => {
           label="Total de clientes"
           value={totalClientes}
           subtitle="cadastrados no sistema"
-          showTrend={false}
+          showTrend={true}
         />
         <div>
           <Filters

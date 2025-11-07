@@ -12,6 +12,7 @@ import { Tabs } from "@/components/ds/tabs/Index";
 import type { Tab } from "@/components/ds/tabs/Index";
 import BaseLayout from "@/components/layouts/base/Index";
 import Title from "@/components/ds/title/Index";
+import Modal from "@/components/ds/modal/Index";
 import { SkeletonForm, SkeletonText } from "@/components/ds/skeleton/Index";
 import { stateOptions } from "@/__mocks__/mocks";
 import {
@@ -40,6 +41,7 @@ const UserUpdate = () => {
   const { usuario, loading: loadingUsuario } = useUsuario(userId);
   const { clientes, loading: loadingClientes } = useClientes();
   const [saving, setSaving] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const {
     handleSubmit,
@@ -117,19 +119,25 @@ const UserUpdate = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
     if (!userId) return;
 
-    if (confirm("Tem certeza que deseja deletar este usuário?")) {
-      try {
-        await deleteUsuario(userId);
-        toast.success("Usuário deletado com sucesso!");
-        router.push("/");
-      } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : "Erro ao deletar usuário"
-        );
-      }
+    try {
+      setSaving(true);
+      await deleteUsuario(userId);
+      toast.success("Usuário deletado com sucesso!");
+      router.push("/");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Erro ao deletar usuário"
+      );
+    } finally {
+      setSaving(false);
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -279,7 +287,7 @@ const UserUpdate = () => {
             text="Deletar Usuário"
             variant="secondary"
             rounded={true}
-            onClick={handleDelete}
+            onClick={handleDeleteClick}
             disabled={saving}
             className="w-full sm:w-auto"
           />
@@ -334,6 +342,18 @@ const UserUpdate = () => {
           <Tabs tabs={subTabs} />
         </div>
       </div>
+
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Deletar Usuário"
+        description={`Tem certeza que deseja deletar o usuário "${usuario?.nome}"? Esta ação não pode ser desfeita.`}
+        confirmText="Deletar"
+        cancelText="Cancelar"
+        variant="danger"
+        loading={saving}
+      />
     </BaseLayout>
   );
 };

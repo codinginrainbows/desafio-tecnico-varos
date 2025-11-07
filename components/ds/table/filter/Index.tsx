@@ -35,29 +35,33 @@ const Filters: React.FC<FiltersProps> = ({
 
   return (
     <div className="w-full bg-gray-950 px-3 py-3 rounded-lg border border-gray-700">
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-3 flex-1">
-          <label className="text-white text-sm font-semibold whitespace-nowrap">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 lg:gap-6">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1 min-w-0">
+          <label className="text-white text-sm font-semibold whitespace-nowrap shrink-0">
             Nome do Consultor
           </label>
-          <SingleSelect
-            options={nameOptions}
-            value={filters.consultorName}
-            onChange={(value) => handleFilterChange("consultorName", value)}
-            placeholder="Nome do consultor"
-          />
+          <div className="flex-1 min-w-0">
+            <SingleSelect
+              options={nameOptions}
+              value={filters.consultorName}
+              onChange={(value) => handleFilterChange("consultorName", value)}
+              placeholder="Nome do consultor"
+            />
+          </div>
         </div>
 
-        <div className="flex items-center gap-3 flex-1">
-          <label className="text-white text-sm font-semibold whitespace-nowrap">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1 min-w-0">
+          <label className="text-white text-sm font-semibold whitespace-nowrap shrink-0">
             Email do Consultor
           </label>
-          <SingleSelect
-            options={emailOptions}
-            value={filters.consultorEmail}
-            onChange={(value) => handleFilterChange("consultorEmail", value)}
-            placeholder="Email do consultor"
-          />
+          <div className="flex-1 min-w-0">
+            <SingleSelect
+              options={emailOptions}
+              value={filters.consultorEmail}
+              onChange={(value) => handleFilterChange("consultorEmail", value)}
+              placeholder="Email do consultor"
+            />
+          </div>
         </div>
       </div>
     </div>

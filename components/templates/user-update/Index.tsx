@@ -144,7 +144,7 @@ const UserUpdate = () => {
   }));
 
   const basicInfoContent = (
-    <div className="grid grid-cols-2 gap-6 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       <Input
         label="Idade"
         placeholder="28"
@@ -181,7 +181,7 @@ const UserUpdate = () => {
         }
         error={errors.estado?.message}
       />
-      <div className="col-span-2">
+      <div className="col-span-1 md:col-span-2">
         <Input
           label="Endereço"
           placeholder="Digite o endereço"
@@ -190,7 +190,7 @@ const UserUpdate = () => {
           error={errors.endereco?.message}
         />
       </div>
-      <div className="col-span-2">
+      <div className="col-span-1 md:col-span-2">
         <Input
           label="Complemento"
           placeholder="Digite o complemento"
@@ -243,7 +243,7 @@ const UserUpdate = () => {
   if (loadingUsuario) {
     return (
       <BaseLayout width="900px">
-        <div className="bg-gray-950 rounded-lg p-8">
+        <div className="bg-gray-950 rounded-lg p-4 sm:p-6 md:p-8">
           <SkeletonText />
           <SkeletonText />
           <SkeletonForm fields={12} />
@@ -266,13 +266,14 @@ const UserUpdate = () => {
     <BaseLayout
       width="900px"
       headerContent={
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <Button
             text={saving ? "Salvando..." : "Salvar Alterações"}
             variant="primary"
             rounded={true}
             onClick={handleSubmit(onSubmit)}
             disabled={saving}
+            className="w-full sm:w-auto"
           />
           <Button
             text="Deletar Usuário"
@@ -280,11 +281,12 @@ const UserUpdate = () => {
             rounded={true}
             onClick={handleDelete}
             disabled={saving}
+            className="w-full sm:w-auto"
           />
         </div>
       }
     >
-      <div className="bg-gray-950 rounded-lg p-8">
+      <div className="bg-gray-950 rounded-lg p-4 sm:p-6 md:p-8">
         <Title text="Editar Usuário" />
         <div className="space-y-6">
           <SingleSelect
@@ -300,7 +302,7 @@ const UserUpdate = () => {
             error={errors.isConsultor?.message}
           />
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input
               label="Nome"
               placeholder="Digite o nome"

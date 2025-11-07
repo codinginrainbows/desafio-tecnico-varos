@@ -97,7 +97,7 @@ const UserCreate = () => {
   }));
 
   const basicInfoContent = (
-    <div className="grid grid-cols-2 gap-6 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       <Input
         label="Idade"
         placeholder="28"
@@ -134,7 +134,7 @@ const UserCreate = () => {
         }
         error={errors.estado?.message}
       />
-      <div className="col-span-2">
+      <div className="col-span-1 md:col-span-2">
         <Input
           label="Endereço"
           placeholder="Digite o endereço"
@@ -143,7 +143,7 @@ const UserCreate = () => {
           error={errors.endereco?.message}
         />
       </div>
-      <div className="col-span-2">
+      <div className="col-span-1 md:col-span-2">
         <Input
           label="Complemento"
           placeholder="Digite o complemento"
@@ -204,11 +204,12 @@ const UserCreate = () => {
             rounded={true}
             onClick={handleSubmit(onSubmit)}
             disabled={saving}
+            className="w-full sm:w-auto"
           />
         </div>
       }
     >
-      <div className="bg-gray-950 rounded-lg p-8">
+      <div className="bg-gray-950 rounded-lg p-4 sm:p-6 md:p-8">
         <Title text="Criar Usuário" />
         <div className="space-y-6">
           <SingleSelect
@@ -224,7 +225,7 @@ const UserCreate = () => {
             error={errors.isConsultor?.message}
           />
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input
               label="Nome"
               placeholder="Digite o nome"
